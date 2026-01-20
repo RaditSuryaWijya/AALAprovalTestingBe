@@ -7,6 +7,7 @@ use App\Http\Controllers\MasterExportController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\PoController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AbsensiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,6 +72,17 @@ Route::middleware('api.auth')->group(function () {
         // Backward-compatible endpoints
         // Route::post('/{id}/approve-supervisor', [CutiController::class, 'approveBySupervisor']);
         // Route::post('/{id}/approve-manager', [CutiController::class, 'approveByManager']);
+    });
+
+    // Absensi routes
+    Route::prefix('absensi')->group(function () {
+        Route::get('/', [AbsensiController::class, 'index']);      // List data (Staff/Approver)
+        Route::post('/', [AbsensiController::class, 'store']);     // Simpan pengajuan baru
+        Route::get('/{id}', [AbsensiController::class, 'show']);   // Detail pengajuan
+        
+        // Endpoint Approval (Otomatis deteksi jabatan Atasan/Koor/Kadept/HRD)
+        Route::post('/{id}/approve', [AbsensiController::class, 'approve']);
+        Route::post('/{id}/reject', [AbsensiController::class, 'reject']);
     });
 });
 
